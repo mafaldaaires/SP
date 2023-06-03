@@ -53,11 +53,11 @@ Agora, correndo o program e...
  
  ### Questões
  
-#### 1 Que alterações foram feitas?
+#### 1. Que alterações foram feitas?
  Inicializaram um array de tamanho 4 entre o meme.txt file e o buffer.
-#### 2 Mitigam na totalidade o problema?
+#### 2. Mitigam na totalidade o problema?
  O buffer continua a guardar no buffer por isso não.
-#### 3 É possível ultrupassar a mitigação usando uma técnica similar à que foi usada anteriormente?
+#### 3. É possível ultrupassar a mitigação usando uma técnica similar à que foi usada anteriormente?
  Sim.
 
 ### Exploit
