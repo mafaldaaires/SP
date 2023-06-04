@@ -109,9 +109,9 @@ We need to create the environment (docker-compose build and docker-compose up).
 In another page, we execute the current process (docker exec -it (process id) /bin/bash).
 In there, we write two instructions:
 
-a2enmod ssl  //Enable the SSL module
+- a2enmod ssl  //Enable the SSL module
 
-a2ensite bank32_apache_ssl  //Enable the sites described in this file
+- a2ensite bank32_apache_ssl  //Enable the sites described in this file
 
 Now we are all ready to start, so we start the Apache server
 ##### service apache2 start
