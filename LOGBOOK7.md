@@ -35,14 +35,3 @@ Knowing that 1 byte=8 bits, to print out 4 bytes we would need 32 %x format spec
 
 ![2 A(1)](https://user-images.githubusercontent.com/116459746/235203984-f4f573d1-1944-47da-a1a8-a98ca50de60d.png)
 ![2 A(2)](https://user-images.githubusercontent.com/116459746/235203797-35752df4-0eaf-468e-b996-eb93f8510cfa.png)
-
-
-#### Task 2.B : Heap Data
-
-
-### Task 3
-### Modifying the Server Program’s Memory
-
-#### Task 3.A : Change the value to a different value
-
-#### Task 3.B : Change the value to 0x5000 
