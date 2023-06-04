@@ -1,128 +1,149 @@
-# SEED Labs - Public-Key Infrastructure (PKI) Lab
-## Semana 12 e 13
+# Trabalho semana 12/13
+# Public-Key Infrastructure (PKI) Lab
 
-### Task 1
-#### Becoming a Certificate Authority (CA)
+## Tarefa 1
+Copiar /usr/lib/ssl/openssl.cnf para o diretório atual com o comando:
 
-Copy the configuration file (openssl.cnf) into the current directory.
+cp /usr/lib/ssl/openssl.cnf ~/
 
-![1](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/d1ad3dd3-215e-4feb-ba20-e2a070697b4e)
-
-According to its [ CA_default ] section, we need to create new sub-directories and files.
-
-[ CA_default ] section:
-
-![2](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/82db898a-ac47-410a-9961-f8c0757847af)
-
-According to [ CA_default ] section we need to:
-
-![3](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/ba773f5b-a88b-46e6-ac27-070b57e101fa)
-
-After this, we return to the parent directory using command *cd ..*
-
-We generate a self-signed certificate for our CA.
-This means that this CA is totally trusted and its certificate will serve as the root certificate.
-
-![20](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/84f3d0df-dba4-4518-8ef1-46c24aa62436)
-
-The output of the command are stored in two files: *ca.key* and *ca.crt*.
-
-The file *ca.key* contains the CA's private key and the file *ca.crt* contains the public-key certificate.
-
-                              *ca.crt* : public-key certificate
-![21](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/89bcfc3d-034a-4c0d-b8e8-bae6b45c7aa1)
-
-                                  *ca.key*: private key
-![23](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/281e2a5d-80e5-4ac9-9515-52885e4e51e1)
+<img width="443" alt="1" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/49475069-c983-4929-93d0-a8c9db6bfa87">
 
 
-#### Questions
-1. What part of the certificate indicates this is a CA’s certificate?
+Abrir openssl.cnf e descomentar unique_subject.
 
-Basic constraints: flag identifying certificate is CA.
- 
- ![x6](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/dc0b453e-4a2d-43ea-8caa-edacb9e38a0d)
+<img width="402" alt="1" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/37905176-90cc-4d1f-a6e4-c2ceff867e9d">
 
-2. What part of the certificate indicates this is a self-signed certificate?
+Criar subdiretórios com os seguintes comandos:
+mkdir demoCA
+cd demoCA
+mkdir certs crl newcerts
 
-![x1](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/bb5314a3-8c21-4464-954a-b3cd72672fd7)
+touch index.txt serial
 
-We can prove this is a self-signed certificate, because __Subject Key Identifier__ and __Authority Key Identifier__ are equal.
+<img width="398" alt="2" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/4f54ded9-c7c6-4d20-8ede-c0dc986af356">
 
-3. In the RSA algorithm, we have a public exponent *e*, a private exponent *d*, a modulus *n*, and two secret numbers *p* and *q*, such that n=pq.  Please identify the values for these elements in your certificate and key files.
-
-public expoent *e* is visible both in the certificate file and in the key, taking the value 65537.
-
-private expoent *d*, modulus *n* and the two secret numbers *p* and *q*, also known as *prime1* and *prime2*  respectively are only visible in the key file.
-
-Modulus | Exponents | Primes
-:---------:|:---------:|:--------:
-![x3](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/ad29bca8-a6d1-4d9a-abe7-768a77555dd3) | ![x4](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/62cf45a3-9643-47d9-ad43-14f554e3a860) | ![x5](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/7d717f67-48b1-45c4-a49d-c146fb29cb33)
+echo "1000" > /serial
+<img width="345" alt="3" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/5cb776c8-49e5-4f1a-a067-427509444cdb">
 
 
+<img width="406" alt="4" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/6a5391ec-31a3-4041-80e9-ac7cccb95319">
+
+Voltar para o diretório onde está o documento openssl e executar os seguintes comandos:
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 \ -keyout ca.key -out ca.crt
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 \-keyout ca.key -out ca.crt \-subj "/CN=www.modelCA.com/O=Model CA LTD./C=US" \-passout pass:dees
+openssl req -in server.csr -text -noout
+openssl rsa -in server.key -text -noout
+
+O output são dois documentos: ca.cert e ca.key.
+
+Quando abrimos ca.cert podemos verificar que é um certificado logo pela primeira linha "Certificate" e que está assinado, pela linha "Signature Algorithm: sha256WithRSAEncryption".
+
+<img width="391" alt="5" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/89036412-070a-4a33-8727-ec9b19740f8e">
+
+Em ca.key encontram-se os valores de modulus, public exponent, private exponent e dois primos prime1 e prime2.
+
+## Tarefa 2
+Gerar um par de chaves, uma privada e uma publica, com o seguinte comando:
 
 
-### Task 2
-#### Generating a Certificate Request for Your Web Server
+<img width="409" alt="7" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/19005827-9e4f-4e94-bb95-d7619c998854">
 
-The command to generate a CSR is quite similar to the one we used in creating the self-signed cer-tificate for the CA.
-The -x509 option is necessary, because otherwise it generates a request. With it, it generates a self-signed certificate.
+Que nos dá como output server.csr e server.key.
+Para ver o contéudo da chave podemos correr o comando: openssl rsa -in server.key -text -noout, onde podemos ver os seguintes componentes: modulus, publicExponent, privateExponent, prime1, prime2, exponent1, exponent2 e coefficient.
 
-The purpose of this task is generate a CSR for *www.bank32.com*.
-
-![1](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/60e5d0be-eaee-4812-bbc4-49d2a634f188)
-
-The command will generate a pair of public/private key, and then create a certificate signing request from the public key. 
-
-                              decoded content of the CSR
-![25](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/b3693c60-14ae-4802-8d49-e0df9e0fe074)
-
-                                        private key files
-![26](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/f02e0327-2d9e-4c4b-9cee-28d99dadedab)
-
-Especially for the following tasks, we need to add two alternative names to the certificate signing request. (Corrigir)
-
-![27](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/18d8574b-9f1f-4e4d-a29b-826ef9d143b3)
+Correr o comando:
+openssl req -new -key server.key -out server.csr -subj "/CN=www.bank32.com" -addext "subjectAltName = DNS:www.bank32A.com, DNS:www.bank32B.com"
+para adicionar dois nomes alternavios ao certificate signing request.
 
 
-### Task 3
-#### Generating a Certificate for your server
+## Tarefa 3
 
-For security reasons, the default setting in *openssl.cnf* does not allow the "openssl ca" command to copy the extension field from the request to the final certificate. To enable that we need to go to the configuration file and uncomment the following line:
+Correr o seguinte comando:
+openssl ca -config myCA_openssl.cnf -policy policy_anything \-md sha256 -days 3650 \-in server.csr -out server.crt -batch \-cert ca.crt -keyfile ca.key
+Para tornar o server.csr num certificado X509. Temos como outpur server.crt. 
 
-![6](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/e9424787-1647-4d83-b14f-6d831aa84719)
+<img width="410" alt="1" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/0117f2c7-128b-40ce-ab90-384427e24484">
 
-The following command turns the certificate signing request (server.csr) into an X509 certificate (server.crt), using the CA’s ca.crt and ca.key.
+<img width="408" alt="2" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/0dd605c3-ee43-417c-b39a-629e7a182858">
 
-![31](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/f3d636f7-da8b-4264-9cd7-887dcd796afe)
+Descomentar 'copy_extensions = copy' no openssl.cnf:
 
-As we print out the decoded content of the certificate we came along with this line, which means the alternative names are included in certificate. 
+<img width="412" alt="9" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/de2721f6-96de-4242-bd94-98d74d63f6c4">
 
-![x7](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/16d2a3f7-167e-4be7-b952-853987a0f497)
+Após correr o seguinte comando, conseguimos verificar que os nomes alternativos foram incluidos nos ficheiros.
 
-### Task 4
-####  Deploying Certificate in an Apache-Based HTTPS Website
 
-We go to the image_www folder.
-In there we see a bank32_apache_ssl.cnf file and a DockerFile.
-We need to create the environment (docker-compose build and docker-compose up).
-In another page, we execute the current process (docker exec -it (process id) /bin/bash).
-In there, we write two instructions:
+<img width="414" alt="4" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/15148d86-45ee-4a1f-9c50-32d683a23ccf">
 
-a2enmod ssl                 // Enable the SSL module
+<img width="401" alt="3" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/9c33548a-1269-4403-8753-2126c1c25bff">
 
-a2ensite bank32_apache_ssl  // Enable the sites described in this file
 
-Now we are all ready to start, so we start the Apache server
-##### service apache2 start
+## Tarefa 4
 
-After this, we can search for our serve. We go to firefox and search https://www.bank32.com/
-However, the link appears to be untrusted, as shown in the following picture.
+Ir para o diretório image_www em Labsetup e verificar o documento bank32_apache_ssl.conf:
 
-![x10](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/412529e5-40f7-4091-ba39-64187e5fbdde)
 
-This means that our certificate has an unknown (or untrusted) CA.
-In order to fix it, we need to add our CA in the list of truted CAs within Firefox. To do this we need to load a certificate into Firefox, so we search: __about:preferences#privacy__, go to *View Certificates* and import the file "ca.crt".
+<img width="406" alt="5" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/d320f609-4629-4f87-a81e-ec8a90418130">
 
-After this, we can search for our server.
+Construir o docker com dcbuild, fazer dcup e noutra janela do terminal correr os seguintes comandos:
+
+
+<img width="407" alt="6" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/49f5db2b-b27d-4cbe-8b81-4a260e423118">
+
+Abrimos o website:
+
+<img width="413" alt="7" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/6f758d16-3172-4ab0-87cd-211ae39a4133">
+
+Como podemos verificar pela imagem, o website não é seguro
+
+
+<img width="416" alt="8" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/62507cc4-9755-4549-b91f-b8d834717bf7">
+
+Para alterar isso, adicionamos o certificado image_www/certs/modelCA.crt, e já conseguimos acessar o nosso website seguramente:
+
+
+<img width="416" alt="10" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/64804f41-8944-4bf2-b39c-9c014b5dbf0b">
+
+
+## Tarefa 5
+
+<img width="381" alt="Capture" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/c10a8815-eea1-42a0-bbbc-0c8f72566f5c">
+
+Após adicionarmos www.example.com como host, este é o resultado:
+
+<img width="233" alt="11" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/565e0f5a-9b93-4640-9c6e-185829489ee6">
+
+Isto ocorre porque o website não está no certificado.
+
+
+## Tarefa 6
+
+Adicionar em /etc/hosts:
+
+
+<img width="408" alt="ESTE2" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/a94dfa6b-3e92-44ce-8854-a8c4a1dc2bd7">
+
+
+Correr:
+openssl req -new -key server.key -out server.csr -subj "/CN=www.bank32.com" -addext "subjectAltName = DNS:www.bank32A.com, DNS:www.bank32B.com, DNS:www.instagram.com"
+
+openssl ca -config openssl.cnf -policy policy_anything \-md sha256 -days 3650 \-in server.csr -out server.crt -batch \-cert ca.crt -keyfile ca.key
+
+<img width="415" alt="ESTE" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/1a4b6efd-10b0-4485-98ee-2e68c8431634">
+
+
+
+cp server.crt ~/Share/Labsetup/volumes
+
+<img width="256" alt="6 2" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/3cc36c1c-c1df-4fb5-8a8d-007a43fb1036">
+
+Alterar no documento bank32_apache_ssl.conf:
+
+<img width="338" alt="6 3" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/df4ddc27-3fab-480f-b35b-f2b5d2f352e9">
+
+
+Adicionar o certifcado ao browser; quando o user tenta acessar www.instagram.com vai apar o nosso website.
+
+<img width="524" alt="final" src="https://github.com/DCC-FCUP-SP/sp2223-t04g08/assets/126345503/87c7b156-fbd9-42a2-aa66-b7f557614069">
+
 
