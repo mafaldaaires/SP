@@ -152,7 +152,7 @@ Depois, usamos o comando gdb no nosso programa (gdb program) e verificamos todas
 
 ![FF3](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/7c89887a-5b90-450b-ba24-25c13f3eebe2)
 
-Analisando a função old_backdoor com o comando disas, encontramos uma system cal que abriria um shell.
+Analisando a função old_backdoor com o comando disas, encontramos uma system call que abriria um shell.
 
 ![FF4](https://github.com/DCC-FCUP-SP/sp2223-t04g06/assets/116459746/638b4914-91e9-42a2-96db-8122d7de4e50)
 
